@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# https://github.com/therealFoxster/format-text
+
+usage() {
+  echo "Usage: $(basename $0) <text> [options]"
+  echo
+  echo "Options:"
+  echo "  -h, --help	Show this help menu and exit"
+  echo "  -b		$(format-text Bold -b)"
+  echo "  -u		$(format-text Underline -u)"
+  echo "  -i		$(format-text Invert -i) background and foreground color"
+  echo "  -c <color>	Background color"
+  echo "  -t <color>	Foreground color (text)"
+  echo "  -n		Append newline character"
+  echo
+  echo "Operands:"
+  echo "  text		The string to be formatted"
+  echo "  color		One of: $(format-text black -bt black -c white)|$(format-text red -bt red)|$(format-text green -bt green)|$(format-text yellow -bt yellow)|$(format-text blue -bt blue)|$(format-text magenta -bt magenta)|$(format-text cyan -bt cyan)|$(format-text white -bt white -c black)"
+  exit 1
+}
+
+OPTIND=2
+
+if [ $# -eq 0 ]; then
+  usage
+else
+  for arg in "$@"; do
+    case "$arg" in
+    "-h"|"--help") usage;;
+    esac
+  done
+fi
+
+while getopts "buic:t:n" opt; do
+  case $opt in
+  b) b=true;;
+  u) u=true;;
+  i) i=true;;
+  c) c=$OPTARG;;
+  t) t=$OPTARG;;
+  n) n="\n";;
+  esac
+done
+
+str="\033["
+
+# Bold
+if [ ! -z $b ]; then
+  str+=";1"
+fi
+
+# Underline
+if [ ! -z $u ]; then
+  str+=";4"
+fi
+
+# Inverse
+if [ ! -z $i ]; then
+  str+=";7"
+fi
+
+# Background colors
+if [ ! -z $c ]; then
+  str+=";"
+  case $c in
+  black)  str+="40";;
+  red)    str+="41";;
+  green)  str+="42";;
+  yellow) str+="43";;
+  blue)   str+="44";;
+  magenta)str+="45";;
+  cyan)   str+="46";;
+  white)  str+="47";;
+  esac
+fi
+
+# Text colors
+if [ ! -z $t ]; then
+  str+=";"
+  case $t in
+  black)  str+="30";;
+  red)    str+="31";;
+  green)  str+="32";;
+  yellow) str+="33";;
+  blue)   str+="34";;
+  magenta)str+="35";;
+  cyan)   str+="36";;
+  white)  str+="37";;
+  esac
+fi
+
+str+="m$1\033[0m$n"
+
+echo -en $str

@@ -1,0 +1,6 @@
+[submodule "vendor/Azule"]
+	path = vendor/Azule
+	url = https://github.com/Al4ise/Azule
+[submodule "vendor/format-text"]
+	path = vendor/format-text
+	url = https://github.com/therealFoxster/format-text
