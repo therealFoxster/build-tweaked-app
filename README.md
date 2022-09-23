@@ -67,7 +67,7 @@ log: Found 6 tweaks in "tweaks/" directory: NoYTPremium, YouPiP, Cercube, DontEa
 log: Extracting app information from "YouTube_17.37.3_com.google.ios.youtube_.ipa"...
 log: Extracted app information.
 log: Tweaks will be injected into YouTube.app (com.google.ios.youtube).
-Press [ENTER] to use default values.
+For each of the prompt below, press [ENTER] to use the default value.
 ==> Output filename: YouTube_17.37.3_tweaked.ipa
 ==> App display name: YouTube
 ==> App bundle ID: com.google.ios.youtube
@@ -78,6 +78,15 @@ Press [ENTER] to use default values.
 log: Running azule...
 ...
 log: Done.
+
+Information (useful for AltStore source)
+Name: YouTube
+Bundle ID: com.google.ios.youtube
+Version: 17.37.3
+Version date: 2022-09-22T21:37:01-07:00
+Tweaks injected: • NoYTPremium v1.0.3\n • YouPiP v1.7.10\n • Cercube v5.3.11\n • DontEatMyContent v1.0.0\n • YTSideloadSignInFix v1.0.0\n • YouTubeDislikesReturn v1.6.8\n 
+Size: 121083343
+
 ```
 
 

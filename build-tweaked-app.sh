@@ -84,7 +84,7 @@ for tweak_path in $tweak_paths; do
 	[[ count -gt 1 ]] && str="${str}," # If not first tweak, add comma before tweak_name
 	str="$str $tweak_name"
 
-	tweaks_str="$tweaks_str$tweak_name" # String containing tweaks and their versions (if any)
+	tweaks_str="${tweaks_str}• $tweak_name" # String containing tweaks and their versions (if any)
 
 	# https://stackoverflow.com/a/63821654/19227228
 	version=$(echo $(basename $tweak_path) | cut -d '_' -f2) # Getting version from tweak_path
@@ -140,7 +140,7 @@ rm -rf $temp # Remove temp/
 ##################
 
 log "Tweaks will be injected into $app_name.app ($app_bundle_id)."
-echo "Press $($format_text '[ENTER]' -bt blue) to use default values."
+echo "For each of the prompt below, press $($format_text '[ENTER]' -bt blue) to use the default value."
 
 function read_input {
 	prompt=$1; default_value=$2
@@ -221,5 +221,20 @@ command="$azule -n $output_filename -i $ipa -o $output -f $tweak_paths -c $app_v
 command="$command $add_args"
 
 log "Running azule..."
-$command
-log "Done."
+if $command; then
+	log "Done."
+else
+	fatal_error "An error occurred. Try running the script again."
+fi
+
+### Information (useful for AltStore source) ###
+echo
+$format_text "Information (useful for AltStore source)" -bnt blue
+echo "Name: $app_name"
+echo "Bundle ID: $app_bundle_id"
+echo "Version: $app_version"
+echo "Version date: $(sed 's/.\{2\}$/:&/' <<< $(date +"%Y-%m-%dT%H:%M:%S%z"))" # ISO 8601 date
+echo "Tweaks injected: $tweaks_str"
+app_size=$(ls -l "$output/$output_filename.ipa" | awk '{print $5}' | grep [0-9])
+echo "Size: $app_size"
+echo
