@@ -1,6 +1,9 @@
 # build-tweaked-app
 Shell script that makes building tweaked apps with [azule](https://github.com/Al4ise/Azule) easier
 
+## Compatibility 
+Only supports macOS at the moment since the script utilizes `defaults` to read .plist files.
+
 ## Getting Started
 
 Clone this repository:
@@ -11,20 +14,22 @@ git clone https://github.com/therealFoxster/build-tweaked-app.git
 `cd` to the repository and run `sudo chmod -R +x .` to make all scripts in the directory executable.
 
 ## Usage
-
-Create a sub-directory to store the .ipa file and tweaks to be injected. 
+Create a directory to store the .ipa file and tweaks to be injected. 
 All tweaks must be placed in a sub-directory called `tweaks`. 
 You may also create a sub-directory inside `tweaks/` to store tweaks that should not be injected. 
 
 Example directory structure:
 ```
-AppName/
-├── app.ipa
-└── tweaks/
-    ├── me.foxster.tweak1_0.0.1_iphoneos-arm.deb
-    ├── me.foxster.tweak2_0.0.1_iphoneos-arm.deb
-    └── ignore/
-        └── me.foxster.ignored-tweak_0.0.1_iphoneos-arm.deb
+.
+├── AppName/
+│   ├── app.ipa
+│   └── tweaks/
+│       ├── me.foxster.tweak1_0.0.1_iphoneos-arm.deb
+│       ├── me.foxster.tweak2_0.0.1_iphoneos-arm.deb
+│       └── ignore/
+│           └── me.foxster.ignored-tweak_0.0.1_iphoneos-arm.deb
+├── build-tweaked-app.sh
+└── vendor/
 ```
 
 Run `build-tweaked-app.sh`, passing the directory created earlier as the first argument:
@@ -61,8 +66,9 @@ Run `build-tweaked-app.sh`, passing the directory created earlier as the first a
 ./build-tweaked-app.sh ./YouTube/
 ```
 
-### Output
-```
+### Console
+```console
+MacBookPro152:build-tweaked-app foxster$ ./build-tweaked-app.sh ./YouTube/
 log: Found 6 tweaks in "tweaks/" directory: NoYTPremium, YouPiP, Cercube, DontEatMyContent, YTSideloadSignInFix, YouTubeDislikesReturn.
 log: Extracting app information from "YouTube_17.37.3_com.google.ios.youtube_.ipa"...
 log: Extracted app information.
@@ -88,5 +94,3 @@ Tweaks injected: • NoYTPremium v1.0.3\n • YouPiP v1.7.10\n • Cercube v5.3.
 Size: 121083343
 
 ```
-
-
