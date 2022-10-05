@@ -15,13 +15,8 @@ function fatal_error {
 	exit 1
 }
 
-function warning {
-	$format_text "warning: " -bt yellow
-	echo "$1"
-}
-
 function log {
-	$format_text "log: " -b
+	$format_text "==> " -b
 	echo "$1"
 }
 
@@ -31,6 +26,9 @@ function input_prompt {
 	[ ! -z $2 ] && echo -n " ($2)" # Default value
 	$format_text ": " -b
 }
+
+echo -n "==> "
+$format_text "Running $(basename $0)..." -bt blue -n
 
 #######################
 ### Check directory ###
@@ -43,6 +41,8 @@ elif [ ! -d $1 ]; then
 fi
 
 cd $1
+log "Taking a look at \"$1\"..."
+
 temp="$PWD/temp"
 output="$PWD/products"
 
@@ -94,7 +94,7 @@ for tweak_path in $tweak_paths; do
 	# If version_ok, add to string
 	[[ $version_ok == true ]] && tweaks_str="$tweaks_str v$version" 
 	# Add newline character to string
-	tweaks_str="$tweaks_str\n " 
+	tweaks_str="$tweaks_str\n" 
 
 	rm -rf "$temp/temp" # Remove temp/temp/
 done
@@ -140,7 +140,7 @@ rm -rf $temp # Remove temp/
 ##################
 
 log "Tweaks will be injected into $app_name.app ($app_bundle_id)."
-echo "For each of the prompt below, press $($format_text '[ENTER]' -bt blue) to use the default value."
+log "$($format_text 'For each of the following input prompt, press' -bt blue) $($format_text '[ENTER]' -bt yellow) $($format_text 'to use the default value.' -bt blue)"
 
 function read_input {
 	prompt=$1; default_value=$2

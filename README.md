@@ -42,7 +42,7 @@ Run `build-tweaked-app.sh`, passing the directory created earlier as the first a
 ```
 .
 ├── YouTube/
-│   ├── YouTube_17.37.3_com.google.ios.youtube_.ipa
+│   ├── YouTube_17.39.4_com.google.ios.youtube_.ipa
 │   └── tweaks/
 │       ├── com.ps.noytpremium_1.0.3_iphoneos-arm.deb
 │       ├── com.ps.youpip_1.7.10_iphoneos-arm.deb
@@ -52,9 +52,9 @@ Run `build-tweaked-app.sh`, passing the directory created earlier as the first a
 │       │   ├── com.ps.ytsystemappearance_1.0.0_iphoneos-arm.deb
 │       │   └── weeb.lillie.youtubedislikesreturn_1.6.6_iphoneos-arm.deb
 │       ├── me.alfhaily.cercube_5.3.11_iphoneos-arm.deb
-│       ├── me.foxster.donteatmycontent_1.0.0_iphoneos-arm.deb
+│       ├── me.foxster.donteatmycontent_1.0.1_iphoneos-arm.deb
 │       ├── me.foxster.ytsideloadsigninfix_1.0.0_iphoneos-arm.deb
-│       └── weeb.lillie.youtubedislikesreturn_1.6.8_iphoneos-arm.deb
+│       └── weeb.lillie.youtubedislikesreturn_1.7.0_iphoneos-arm.deb
 ├── build-tweaked-app.sh
 └── vendor/
     ├── Azule/
@@ -69,28 +69,30 @@ Run `build-tweaked-app.sh`, passing the directory created earlier as the first a
 ### Console
 ```console
 MacBookPro152:build-tweaked-app foxster$ ./build-tweaked-app.sh ./YouTube/
-log: Found 6 tweaks in "tweaks/" directory: NoYTPremium, YouPiP, Cercube, DontEatMyContent, YTSideloadSignInFix, YouTubeDislikesReturn.
-log: Extracting app information from "YouTube_17.37.3_com.google.ios.youtube_.ipa"...
-log: Extracted app information.
-log: Tweaks will be injected into YouTube.app (com.google.ios.youtube).
-For each of the prompt below, press [ENTER] to use the default value.
-==> Output filename: YouTube_17.37.3_tweaked.ipa
+==> Running build-tweaked-app.sh...
+==> Taking a look at "./YouTube/"...
+==> Found 6 tweaks in "tweaks/" directory: NoYTPremium, YouPiP, Cercube, DontEatMyContent, YTSideloadSignInFix, YouTubeDislikesReturn.
+==> Extracting app information from "YouTube_17.39.4_com.google.ios.youtube_.ipa"...
+==> Extracted app information.
+==> Tweaks will be injected into YouTube.app (com.google.ios.youtube).
+==> For each of the following input prompt, press [ENTER] to use the default value.
+==> Output filename: YouTube_17.39.4_tweaked.ipa
 ==> App display name: YouTube
 ==> App bundle ID: com.google.ios.youtube
-==> App version: 17.37.3
+==> App version: 17.39.4
 ==> Remove UISupportedDevices: y
 ==> Remove app extensions: y
 ==> Additional args for azule: 
-log: Running azule...
+==> Running azule...
 ...
-log: Done.
+==> Done.
 
 Information (useful for AltStore source)
 Name: YouTube
 Bundle ID: com.google.ios.youtube
-Version: 17.37.3
-Version date: 2022-09-22T21:37:01-07:00
-Tweaks injected: • NoYTPremium v1.0.3\n • YouPiP v1.7.10\n • Cercube v5.3.11\n • DontEatMyContent v1.0.0\n • YTSideloadSignInFix v1.0.0\n • YouTubeDislikesReturn v1.6.8\n 
-Size: 121083343
+Version: 17.39.4
+Version date: 2022-10-04T22:51:53-07:00
+Tweaks injected: • NoYTPremium v1.0.3\n• YouPiP v1.7.10\n• Cercube v5.3.11\n• DontEatMyContent v1.0.1\n• YTSideloadSignInFix v1.0.0\n• YouTubeDislikesReturn v1.7.0\n
+Size: 122349377
 
 ```
