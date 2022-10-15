@@ -8,7 +8,7 @@ Only supports macOS at the moment since the script utilizes `defaults` to read .
 
 Clone this repository:
 ```
-git clone https://github.com/therealFoxster/build-tweaked-app.git
+git clone --recurse-submodules https://github.com/therealFoxster/build-tweaked-app.git
 ```
 
 `cd` to the repository and run `sudo chmod -R +x .` to make all scripts in the directory executable.
