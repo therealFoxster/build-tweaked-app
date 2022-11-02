@@ -158,12 +158,6 @@ function read_input {
 	input_prompt "$prompt"; echo "$returned_input$3"
 }
 
-### Output filename ###
-output_filename="${app_name}_${app_version}_tweaked"
-read_input "Output filename" "$output_filename" ".ipa"
-output_filename=$returned_input
-# log $output_filename
-
 ### Display name ###
 read_input "App display name" "$app_name"
 app_name=$returned_input
@@ -178,6 +172,12 @@ app_bundle_id=$returned_input
 read_input "App version" "$app_version"
 app_version=$returned_input
 # log $app_version
+
+### Output filename ###
+output_filename="${app_name}_${app_version}_tweaked"
+read_input "Output filename" "$output_filename" ".ipa"
+output_filename=$returned_input
+# log $output_filename
 
 function validate_yesno {
 	input=$(echo $1 | awk '{print tolower($0)}') # Convert input to lowercase
