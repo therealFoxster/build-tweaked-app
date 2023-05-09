@@ -27,8 +27,45 @@ function input_prompt {
 	$format_text ": " -b
 }
 
+function read_input {
+	prompt=$1; default_value=$2
+
+	input_prompt "$prompt" "$default_value"
+	read input
+
+	# If input is not empty, set returned_input to input, else set returned_input to default_value
+	[[ "$(echo "$input" | xargs)" != "" ]] && returned_input="$input" || returned_input=$default_value
+
+	echo -en "\033[1A\033[2K" # https://stackoverflow.com/a/9135153/19227228
+	# \033[1A moves cursor to previous line
+	# \033[2K erases line
+
+	input_prompt "$prompt"; echo "$returned_input$3"
+}
+
+function validate_yesno {
+	input=$(echo $1 | awk '{print tolower($0)}') # Convert input to lowercase
+	input=${input:0:1} # Get first character of input
+	
+	if [[ $input != "y" ]] && [[ $input != "n" ]]; then
+		error "Enter \"y\" or \"n\""
+		yesno=false
+		return
+	fi
+
+	yesno=true
+}
+
 echo -n "==> "
 $format_text "Running $(basename $0)..." -bt blue -n
+
+### Remove app extensions ###
+yesno=false
+while [ $yesno == false ]; do
+	read_input "Customize output .ipa file" "n"
+	validate_yesno $returned_input
+done
+customize=$returned_input
 
 #######################
 ### Check directory ###
@@ -64,7 +101,7 @@ str="Found $num_tweaks tweak"
 [ $num_tweaks -gt 1 ] && str="${str}s" # Add "s" if there are more than 1 tweak
 str="${str} in \"tweaks/\" directory:"
 
-tweak_paths=$(echo ./tweaks/*.deb)
+tweak_paths=$(ls -d "$PWD"/tweaks/*.deb)
 
 rm -rf $temp # Remove temp/ if exists
 mkdir -p $temp # Make temp/
@@ -132,88 +169,67 @@ app_name=$(defaults read "$payload/Info" CFBundleDisplayName)
 app_bundle_id=$(defaults read "$payload/Info" CFBundleIdentifier)
 app_version=$(defaults read "$payload/Info" CFBundleVersion)
 
+output_filename="${app_name}_${app_version}_tweaked"
+remove_uisupporteddevices="y"
+remove_extensions="y"
+add_args=""
+
 log "Extracted app information."
 rm -rf $temp # Remove temp/
+
+log "Tweaks will be injected into $app_name.app ($app_bundle_id)."
 
 ##################
 ### User input ###
 ##################
 
-log "Tweaks will be injected into $app_name.app ($app_bundle_id)."
-log "$($format_text 'For each of the following input prompt, press' -bt blue) $($format_text '[ENTER]' -bt yellow) $($format_text 'to use the default value.' -bt blue)"
+if [[ $customize == "y" ]]; then
+	log "$($format_text 'For each of the following input prompt, press' -bt blue) $($format_text '[ENTER]' -bt yellow) $($format_text 'to use the default value.' -bt blue)"
 
-function read_input {
-	prompt=$1; default_value=$2
+	### Display name ###
+	read_input "App display name" "$app_name"
+	app_name=$returned_input
+	# log $app_name
 
-	input_prompt "$prompt" "$default_value"
-	read input
+	### Bundle ID ###
+	read_input "App bundle ID" "$app_bundle_id"
+	app_bundle_id=$returned_input
+	# log $app_bundle_id
 
-	# If input is not empty, set returned_input to input, else set returned_input to default_value
-	[[ "$(echo "$input" | xargs)" != "" ]] && returned_input="$input" || returned_input=$default_value
+	### App version ###
+	read_input "App version" "$app_version"
+	app_version=$returned_input
+	# log $app_version
 
-	echo -en "\033[1A\033[2K" # https://stackoverflow.com/a/9135153/19227228
-	# \033[1A moves cursor to previous line
-	# \033[2K erases line
+	### Output filename ###
+	output_filename="${app_name}_${app_version}_tweaked"
+	read_input "Output filename" "$output_filename" ".ipa"
+	output_filename=$returned_input
+	# log $output_filename
 
-	input_prompt "$prompt"; echo "$returned_input$3"
-}
+	### Remove UISupportedDevices ###
+	yesno=false
+	while [ $yesno == false ]; do
+		read_input "Remove UISupportedDevices" "y"
+		validate_yesno $returned_input
+	done
+	remove_uisupporteddevices=$returned_input
+	# log $remove_uisupporteddevices
 
-### Display name ###
-read_input "App display name" "$app_name"
-app_name=$returned_input
-# log $app_name
+	### Remove app extensions ###
+	yesno=false
+	while [ $yesno == false ]; do
+		read_input "Remove app extensions" "y"
+		validate_yesno $returned_input
+	done
+	remove_extensions=$returned_input
+	# log $remove_extensions
 
-### Bundle ID ###
-read_input "App bundle ID" "$app_bundle_id"
-app_bundle_id=$returned_input
-# log $app_bundle_id
-
-### App version ###
-read_input "App version" "$app_version"
-app_version=$returned_input
-# log $app_version
-
-### Output filename ###
-output_filename="${app_name}_${app_version}_tweaked"
-read_input "Output filename" "$output_filename" ".ipa"
-output_filename=$returned_input
-# log $output_filename
-
-function validate_yesno {
-	input=$(echo $1 | awk '{print tolower($0)}') # Convert input to lowercase
-	input=${input:0:1} # Get first character of input
-	
-	if [[ $input != "y" ]] && [[ $input != "n" ]]; then
-		error "Enter \"y\" or \"n\""
-		yesno=false
-		return
-	fi
-
-	yesno=true
-}
-
-### Remove UISupportedDevices ###
-yesno=false
-while [ $yesno == false ]; do
-	read_input "Remove UISupportedDevices" "y"
-	validate_yesno $returned_input
-done
-remove_uisupporteddevices=$returned_input
-# log $remove_uisupporteddevices
-
-### Remove app extensions ###
-yesno=false
-while [ $yesno == false ]; do
-	read_input "Remove app extensions" "y"
-	validate_yesno $returned_input
-done
-remove_extensions=$returned_input
-# log $remove_extensions
-
-### Additional args for azule ###
-read_input "Additional args for azule"
-add_args="$returned_input"
-# log "$add_args"
+	### Additional args for azule ###
+	read_input "Additional args for azule"
+	add_args="$returned_input"
+	# log "$add_args"
+fi
 
 command="$azule -n $output_filename -i $ipa -o $output -f $tweak_paths -c $app_version -b $app_bundle_id -p $app_name"
 [[ $remove_uisupporteddevices == "y" ]] && command="$command -u"
